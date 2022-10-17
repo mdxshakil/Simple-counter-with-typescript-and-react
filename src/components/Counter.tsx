@@ -3,27 +3,38 @@ import './Counter.css';
 import History from './History';
 
 const Counter = () => {
-    const [counter, setCounter] = useState<number>(0);
+    const [counter, setCounter] = useState<number>(JSON.parse(localStorage.getItem('counter') || '{}'));
     const [history, setHistory] = useState<number>(0);
 
     useEffect(() => {
         const previousCount: number = JSON.parse(localStorage.getItem('counter') || '{}');
         setCounter(previousCount);
         setHistory(previousCount);
+        console.log(counter);
+        
     }, [])
+
+    useEffect(()=>{
+        if (counter) {
+            localStorage.counter = counter;            
+        }
+    },[counter])
 
 
     const increaseCount = () => {
+        if (counter <= 0) {
+            setCounter(0);
+        }
         setCounter(prevCount => prevCount + 1);
-        localStorage.counter = counter+1;
+        localStorage.counter = counter;
     }
     const decreaseCount = () => {
         setCounter(prevCount => prevCount - 1);
-        localStorage.counter = counter-1;
+        localStorage.counter = counter;
     }
     const resetCount = () => {
-        setCounter(0)
-        localStorage.counter = counter;
+        setCounter(0);
+        setHistory(counter);
     }
 
     return (
